@@ -11,3 +11,6 @@ misc.xml
 kotlinc.xml
 vcs.xml
 gradle.xml
+
+artifacts
+git_toolbox_prj.xml

@@ -4,6 +4,7 @@ import love.forte.simbot.common.function.ConfigurerFunction
 import love.forte.simbot.common.function.invokeWith
 import love.forte.simbot.component.NoSuchComponentException
 import love.forte.simbot.component.find
+import love.forte.simbot.event.EventListenerRegistrationHandle
 import love.forte.simbot.event.EventResult
 import love.forte.simbot.logger.LoggerFactory
 import love.forte.simbot.logger.logger
@@ -14,7 +15,7 @@ import love.forte.simbot.plugin.*
  *
  * @author ForteScarlet
  */
-class FooPlugin : Plugin {
+class FooPlugin(val handle: EventListenerRegistrationHandle) : Plugin {
     companion object Factory : PluginFactory<FooPlugin, FooPluginConfiguration> {
         private val logger = LoggerFactory.logger<FooPlugin>()
 
@@ -32,14 +33,14 @@ class FooPlugin : Plugin {
             }
 
 
-            // 此处预留空间，实现功能
+            // 实现功能
             val handle = context.eventDispatcher.register { eventContext ->
                 logger.info("Event: {}", eventContext.event)
 
                 EventResult.empty()
             }
 
-            return FooPlugin()
+            return FooPlugin(handle)
         }
     }
 }

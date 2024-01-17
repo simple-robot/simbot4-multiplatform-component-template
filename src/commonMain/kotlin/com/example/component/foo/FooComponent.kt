@@ -16,7 +16,7 @@ import kotlin.jvm.JvmField
  */
 class FooComponent : Component {
     override val id: String get() = ID_VALUE
-    override val serializersModule: SerializersModule get() = Factory.SerializersModule
+    override val serializersModule: SerializersModule get() = SerializersModule
 
     /** 伴生对象实现的工厂实现 */
     companion object Factory : ComponentFactory<FooComponent, FooComponentConfiguration> {
