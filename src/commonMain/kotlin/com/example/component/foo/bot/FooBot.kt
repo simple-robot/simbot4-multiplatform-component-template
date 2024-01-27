@@ -149,20 +149,20 @@ class FooBot(
     }
 
     /**
-     * 针对 [Contact] 相关的实现。此处作为示例，
-     * 暂不支持，不支持的情况下可直接返回 `null`。
+     * 针对 [Contact] 相关的实现。此处作为示例暂不考虑支持，
+     * 不支持的情况下可直接返回 `null`。
      */
     override val contactRelation: ContactRelation? = null
 
     /**
-     * 针对 [ChatGroup] 相关的实现。此处作为示例，
-     * 暂不支持，不支持的情况下可直接返回 `null`。
+     * 针对 [ChatGroup] 相关的实现。此处作为示例暂不考虑支持，
+     * 不支持的情况下可直接返回 `null`。
      */
     override val groupRelation: GroupRelation? = null
 
     /**
-     * 针对 [Guild] 相关的实现。此处作为示例，
-     * 暂不支持，不支持的情况下可直接返回 `null`。
+     * 针对 [Guild] 相关的实现。此处作为示例暂不考虑支持，
+     * 不支持的情况下可直接返回 `null`。
      */
     override val guildRelation: GuildRelation? = null
 
