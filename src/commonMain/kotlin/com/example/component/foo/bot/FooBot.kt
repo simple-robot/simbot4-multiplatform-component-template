@@ -178,11 +178,14 @@ class FooBot(
 /**
  * bot 的配置类，实现 [SerializableBotConfiguration]
  * 并支持 [Serializable]，
- * 且不要忘了将它的多态信息添加到你的 Component 实现 [FooComponent] 中！
+ * 且不要忘了将它的多态信息添加到你的 Component 实现 [FooComponent.SerializersModule] 中！
  *
  */
 @Serializable
 @SerialName(FooComponent.ID_VALUE)
 class FooBotConfiguration : SerializableBotConfiguration() {
+    /**
+     * 默认 5s
+     */
     var duration: Duration = 5.seconds
 }
