@@ -1,6 +1,9 @@
+import love.forte.simbot.gradle.suspendtransforms.SuspendTransforms
+
 plugins {
-    // Kotlin 的版本已经在 buildSrc 中引入了，因此此处可以省略
+    // Kotlin和序列化插件
     kotlin("multiplatform")
+    alias(libs.plugins.kotlin.serialization)
     // 参考 https://github.com/ForteScarlet/kotlin-suspend-transform-compiler-plugin
     // 因为已经在 buildSrc 中添加了依赖，此处可以省略版本
     id("love.forte.plugin.suspend-transform")
@@ -46,7 +49,11 @@ kotlin {
             useJUnitPlatform()
         }
     }
-    js()
+    js {
+        nodejs()
+        browser()
+        binaries.library()
+    }
 
     // 以下是 simbot-api 支持的 native 目标
     // tair1
@@ -77,12 +84,36 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            api(libs.simbot.api)
+            /*
+             * 建议使用仅编译，
+             * 因为一般我们会建议使用者手动添加具体的 simbot 核心库依赖。
+             */
+            compileOnly(libs.simbot.api)
+            compileOnly(libs.simbot.common.annotations)
         }
 
         commonTest.dependencies {
-            implementation("org.jetbrains.kotlin:kotlin-test")
-            api(libs.simbot.core)
+            implementation(kotlin("test"))
+            implementation(libs.kotlinx.coroutines.test)
+            implementation(libs.simbot.core)
+        }
+
+        jsMain.dependencies {
+            /*
+             * compileOnly 在 js 平台和 native 平台上不怎么好使，
+             * 所以非 JVM 的情况下需要改成 implementation 或 api
+             */
+            implementation(libs.simbot.api)
+            implementation(libs.simbot.common.annotations)
+        }
+
+        nativeMain.dependencies {
+            /*
+             * compileOnly 在 js 平台和 native 平台上不怎么好使，
+             * 所以非 JVM 的情况下需要改成 implementation 或 api
+             */
+            implementation(libs.simbot.api)
+            implementation(libs.simbot.common.annotations)
         }
 
     }
@@ -93,24 +124,26 @@ kotlin {
 // 可以用来将 `suspend fun xxx` 转化为 `fun xxxBlocking、xxxAsync` 等。
 // 参考 https://github.com/ForteScarlet/kotlin-suspend-transform-compiler-plugin
 // 如果最终的成品内没有挂起函数，可以考虑把这个插件以及 buildSrc 内相关的东西移除。
-// suspendTransform {
-//     includeRuntime = false
-//     includeAnnotation = false
 //
-//     addJvmTransformers(
-//         // @JvmBlocking
-//         SuspendTransforms.jvmBlockingTransformer,
-//         // @JvmAsync
-//         SuspendTransforms.jvmAsyncTransformer,
-//
-//         // @JvmSuspendTrans
-//         SuspendTransforms.suspendTransTransformerForJvmBlocking,
-//         SuspendTransforms.suspendTransTransformerForJvmAsync,
-//         SuspendTransforms.suspendTransTransformerForJvmReserve,
-//
-//         // @JvmSuspendTransProperty
-//         SuspendTransforms.jvmSuspendTransPropTransformerForBlocking,
-//         SuspendTransforms.jvmSuspendTransPropTransformerForAsync,
-//         SuspendTransforms.jvmSuspendTransPropTransformerForReserve,
-//     )
-// }
+// 此处的 SuspendTransforms 是在 buildSrc 中添加的 simbot.gradle.suspend
+suspendTransform {
+    includeRuntime = false
+    includeAnnotation = false
+
+    addJvmTransformers(
+        // @JvmBlocking
+        SuspendTransforms.jvmBlockingTransformer,
+        // @JvmAsync
+        SuspendTransforms.jvmAsyncTransformer,
+
+        // @ST
+        SuspendTransforms.suspendTransTransformerForJvmBlocking,
+        SuspendTransforms.suspendTransTransformerForJvmAsync,
+        SuspendTransforms.suspendTransTransformerForJvmReserve,
+
+        // @STP
+        SuspendTransforms.jvmSuspendTransPropTransformerForBlocking,
+        SuspendTransforms.jvmSuspendTransPropTransformerForAsync,
+        SuspendTransforms.jvmSuspendTransPropTransformerForReserve,
+    )
+}

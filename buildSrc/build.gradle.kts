@@ -8,12 +8,13 @@ repositories {
     mavenLocal()
 }
 
-val kotlinVersion = "1.9.21"
-val suspendTransformVersion = "0.6.0-beta3"
+val kotlinVersion: String = libs.versions.kotlin.get()
 
 dependencies {
     implementation(kotlin("gradle-plugin", kotlinVersion))
     // 用于使用插件 `id("love.forte.plugin.suspend-transform")`
-    implementation("love.forte.plugin.suspend-transform:suspend-transform-plugin-gradle:$suspendTransformVersion")
+    implementation(libs.suspend.transform.gradle)
+    // 用于使用辅助的 SuspendTransforms 配置
+    implementation(libs.simbot.gradle.suspend)
 }
 
