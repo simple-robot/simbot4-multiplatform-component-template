@@ -1,6 +1,7 @@
 # Simbot4 Multiplatform component template
 
-这是一个基于 simbot4 的组件开发项目模板。
+这是一个基于 simbot4 的**组件开发**项目模板。
+再强调一下这是组件开发，不是普通应用开发。
 
 此模板基于 Kotlin/Multiplatform，你也可以简单的将其更替为 Kotlin/JVM。
 
