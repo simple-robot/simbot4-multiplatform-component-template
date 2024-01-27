@@ -23,8 +23,10 @@ import love.forte.simbot.event.EventProcessor
 import love.forte.simbot.event.onEachError
 import love.forte.simbot.logger.LoggerFactory
 import love.forte.simbot.logger.logger
+import love.forte.simbot.suspendrunner.ST
 import kotlin.concurrent.Volatile
 import kotlin.coroutines.CoroutineContext
+import kotlin.jvm.JvmSynthetic
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 
@@ -128,7 +130,13 @@ class FooBot(
      * 此处会使用 [started] 判断，如果启动好了，就不再启动了。
      *
      * 此处使用 [Mutex] 加了锁来确保并发安全。
+     *
+     * 这是一个挂起函数，并且它的父函数有标记 @[ST]，
+     * 因此建议增加 @[JvmSynthetic] 对 Java 隐藏挂起函数本身。
+     * 当然，也可以同样标记一个 @[ST]，效果类似。
+     *
      */
+    @JvmSynthetic
     override suspend fun start() {
         startLock.withLock {
             if (started) {
