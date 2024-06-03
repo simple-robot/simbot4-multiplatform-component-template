@@ -1,4 +1,5 @@
 import love.forte.simbot.gradle.suspendtransforms.SuspendTransforms
+import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 
 plugins {
     // Kotlin和序列化插件
@@ -36,13 +37,15 @@ kotlin {
     applyDefaultHierarchyTemplate()
 
     jvmToolchain(11)
+
+    @OptIn(ExperimentalKotlinGradlePluginApi::class)
     jvm {
         withJava()
-        compilations.all {
-            kotlinOptions {
-                javaParameters = true
-                freeCompilerArgs = freeCompilerArgs + listOf("-Xjvm-default=all")
-            }
+        compilerOptions {
+            javaParameters.set(true)
+            freeCompilerArgs.addAll(
+                "-Xjvm-default=all"
+            )
         }
 
         testRuns["test"].executionTask.configure {
@@ -85,11 +88,15 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             /*
-             * 建议使用仅编译，
+             * 建议使用仅编译 (compileOnly)，
              * 因为一般我们会建议使用者手动添加具体的 simbot 核心库依赖。
+             *
+             * 但是 compileOnly 在 js 平台和 native 平台上不怎么好使，
+             * 所以非 JVM 的情况下需要改成 implementation 或 api,
+             * 然后在 JVM 平台中换成 compileOnly
              */
-            compileOnly(libs.simbot.api)
-            compileOnly(libs.simbot.common.annotations)
+            implementation(libs.simbot.api)
+            implementation(libs.simbot.common.annotations)
         }
 
         commonTest.dependencies {
@@ -98,24 +105,14 @@ kotlin {
             implementation(libs.simbot.core)
         }
 
-        jsMain.dependencies {
+        jvmMain.dependencies {
             /*
-             * compileOnly 在 js 平台和 native 平台上不怎么好使，
-             * 所以非 JVM 的情况下需要改成 implementation 或 api
+             * 建议使用仅编译，
+             * 因为一般我们会建议使用者手动添加具体的 simbot 核心库依赖。
              */
-            implementation(libs.simbot.api)
-            implementation(libs.simbot.common.annotations)
+            compileOnly(libs.simbot.api)
+            compileOnly(libs.simbot.common.annotations)
         }
-
-        nativeMain.dependencies {
-            /*
-             * compileOnly 在 js 平台和 native 平台上不怎么好使，
-             * 所以非 JVM 的情况下需要改成 implementation 或 api
-             */
-            implementation(libs.simbot.api)
-            implementation(libs.simbot.common.annotations)
-        }
-
     }
 }
 

@@ -3,6 +3,8 @@ import com.example.component.foo.FooPlugin
 import com.example.component.foo.bot.FooBotManager
 import com.example.component.foo.event.FooEvent
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.runTest
 import love.forte.simbot.application.listeners
 import love.forte.simbot.core.application.launchSimpleApplication
@@ -48,6 +50,12 @@ class TestMain {
         val bot = botManger.registerFoo()
         // 启动 bot
         bot.start()
+
+        launch {
+            delay(1000)
+            bot.cancel()
+            app.cancel()
+        }
 
         // 挂起 app，直到被结束
         app.join()
