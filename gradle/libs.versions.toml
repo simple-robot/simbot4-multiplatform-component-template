@@ -1,8 +1,8 @@
 [versions]
 kotlin = "2.0.0"
 kotlinx-coroutines = "1.8.1"
-simbot = "4.0.0-RC3"
-suspendTransformVersion = "0.8.0-beta1"
+simbot = "4.1.0"
+suspendTransformVersion = "0.9.0"
 
 [libraries]
 # simbot
